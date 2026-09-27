@@ -1,0 +1,33 @@
+1: Create all the Entities.
+    1: User: id, name, email, phone, List of Bookings.
+    2: City: id, name, List of Theatres.
+    3: Theatre: id, name, city, address, List of Screens.
+    4: Screen: id, name, Theatre, List of Seats, List of Shows. Note that seat here will be permanent and for each show and seat different class will be used.
+    5: Seat: id, type(enum), row, col
+    6: Show: id, name, Screen, Movie, Start time, End time, ShowStatus(enum), showSeats map(maps seat to showSeat).
+        It will have a function to initialize seats in Hashmap. it will take seats from Screen and then create a showSeat(has show and seat details).
+    7: ShowSeat: Show, Seat, price, ShowSeatStatus(enum, to check if that seat of that show is available), lockedBy(which bookingId locked it), expiry.
+        It will have lock, confirm & release seats functions.
+        Lock: a synchronised boolean function which checks if seat is available or if is locked and expired so that it can release and lock it.
+        Confirm: Check if seat is locked, then only it can confirm. Checks if bookingId that confirmed the booking is same as the one who locked.
+        Release: Suppose seat is expired or cancelled they are released meaning lockedBy is -1 & status is set available.
+    8: CountersL Create a Global counter class which helps us to set BookingId, PaymentId etc.
+    9: Movie: Id, title, Language(enum), Genre(enum), ReleaseDate.
+    10: Booking: id, User(Who Booked), Show(For Which show), totalAmount, List of SubBookings, BookingDate, ExpiryDate, BookingStatus(enum), PaymentMethod(enum)
+    11: SubBooking: id, price, ShowSeat
+    12: Payment: id, Booking, Amount, PaymentStatus(enum), CreatedAt, TransactionId, PaymentMethod.
+    13: PaymentResult: success(boolean), Message, TransactionId. This is used when Payment is done using Payment Gateway to get status.
+    14: Ticket: (Generated only when Booking is Confirmed), Id, Booking, Price, CreatedAt
+    15: Total 9 Enums.
+
+2: Create the Services:
+    1: User Service: Create User, See a Users Booking.
+    2: City Service: Add & Remove Theatre from a city, See All Theatres in a city, All Shows in City, All Movies in City.
+    3: Theatre Service: Add & Remove Screens.
+    4: Screen Service: Add & Remove Seats & Shows.
+    5: Show Service: Add ShowSeat for Shows, get Shows for given Movie & City.
+    6: Booking Service: Create, Confirm & Cancel Booking, Add Sub booking, Release Seats
+    7: Then Create Pricing Strategy Interface which calculates price for show and seat. Which is based on Seat type and Show time. We implement the method for Regular Pricing, Dynamic and Premium Pricing
+    8: Create Payment Gateway Interface which has pay, verify and refund functionality.
+        RazorPay implements it and creates Payment result for pay method.
+    9: Payment Service:

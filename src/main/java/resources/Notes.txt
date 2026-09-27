@@ -1,0 +1,115 @@
+1. Core Requirements
+- Multiple cities
+- Multiple theatres per city
+- Multiple screens per theatre
+- Different seat types
+- Movies
+- Shows
+- Seat availability per show
+- Booking seats
+- Temporary seat locking
+- Payment
+- Cancellation
+
+Framework:
+Entities
+────────
+
+User
+City
+Theatre
+Screen
+Seat
+Movie
+Show
+ShowSeat -> Because Seat is permanent and show is changing, so distinction is created
+Booking
+BookingSeat
+Payment
+
+
+Services
+────────
+
+MovieService
+TheatreService
+ShowService
+BookingService
+PaymentService
+PricingService
+
+
+Interfaces
+──────────
+
+PaymentGateway
+PricingStrategy
+CancellationPolicy
+
+
+Repositories
+────────────
+
+MovieRepository
+ShowRepository
+BookingRepository
+
+
+Classes:
+
+                User
+                  │
+                  ▼
+               Booking
+              /       \
+             ▼         ▼
+        SubBooking   Payment
+             │
+             ▼
+          ShowSeat
+             │
+        ┌────┴────┐
+        ▼         ▼
+      Show       Seat
+        │          │
+     ┌──┴──┐       │
+     ▼     ▼       │
+   Movie Screen ◄──┘
+            │
+            ▼
+         Theatre
+            │
+            ▼
+           City
+
+
+Booking Algorithm:
+Request
+   │
+   ▼
+Validate Show
+   │
+   ▼
+Get ShowSeats
+   │
+   ▼
+Sort seats
+   │
+   ▼
+Acquire locks
+   │
+   ├── Failure
+   │      │
+   │      ▼
+   │   Release acquired seats
+   │      │
+   │      ▼
+   │   Booking Failed
+   │
+   └── Success
+          │
+          ▼
+     Create Booking
+          │
+          ▼
+    PAYMENT_PENDING
